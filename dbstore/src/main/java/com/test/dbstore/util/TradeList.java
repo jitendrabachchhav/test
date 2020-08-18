@@ -3,6 +3,7 @@
  */
 package com.test.dbstore.util;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-public class TradeStore {
+public class TradeList {
 	private final Map<String, Trade> store = new HashMap<String, Trade>();
 
 	public Trade put(String tradeId, Trade newTrade) {
@@ -36,7 +37,11 @@ public class TradeStore {
 	public Trade get(String tradeId) {
 		return store.get(tradeId);
 	}
-
+	
+	public Collection<Trade> values(){
+		return store.values();
+	}
+	
 	public void clear() {
 		this.store.clear();
 	}

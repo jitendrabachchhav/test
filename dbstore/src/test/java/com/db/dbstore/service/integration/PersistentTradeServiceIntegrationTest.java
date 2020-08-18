@@ -51,7 +51,7 @@ public class PersistentTradeServiceIntegrationTest {
 	public void testStoreTradeSucceeds() {
 		log.info("Starting testStoreTradeSucceeds");
 		LocalDate today = LocalDate.of(2020, 8, 15);
-		Trade t1 = getTrade("T1", 1, today, today);
+		Trade t1 = getTrade("T1", 1, today);
 
 		tradeService.store(t1, today);
 		Trade dbTrade = tradeService.getLatest("T1");
@@ -62,8 +62,8 @@ public class PersistentTradeServiceIntegrationTest {
 	public void testStoreTradeSucceedsWhenLaterVersionIsProcessed() {
 		log.info("Starting testStoreTradeSucceedsWhenLaterVersionIsProcessed");
 		LocalDate today = LocalDate.of(2020, 8, 15);
-		Trade t1 = getTrade("T1", 1, today, today);
-		Trade t2 = getTrade("T1", 2, today, today);
+		Trade t1 = getTrade("T1", 1, today);
+		Trade t2 = getTrade("T1", 2, today);
 
 		tradeService.store(t1, today);
 		Trade dbTrade = tradeService.getLatest("T1");
@@ -78,8 +78,8 @@ public class PersistentTradeServiceIntegrationTest {
 	public void testExceptionThrownWhenOlderVersionIsProcessed() {
 		log.info("Starting testExceptionThrownWhenOlderVersionIsProcessed");
 		LocalDate today = LocalDate.of(2020, 8, 15);
-		Trade t1 = getTrade("T1", 2, today, today);
-		Trade t2 = getTrade("T1", 1, today, today);
+		Trade t1 = getTrade("T1", 2, today);
+		Trade t2 = getTrade("T1", 1, today);
 
 		tradeService.store(t1, today);
 		Trade dbTrade = tradeService.getLatest("T1");
@@ -96,8 +96,8 @@ public class PersistentTradeServiceIntegrationTest {
 	public void testStoreSucceedsWhenSameVersionIsProcessed() {
 		log.info("Starting testStoreSucceedsWhenSameVersionIsProcessed");
 		LocalDate today = LocalDate.of(2020, 8, 15);
-		Trade t1 = getTrade("T1", 2, today, today);
-		Trade t2 = getTrade("T1", 2, today, today);
+		Trade t1 = getTrade("T1", 2, today);
+		Trade t2 = getTrade("T1", 2, today);
 
 		tradeService.store(t1, today);
 		Trade dbTrade = tradeService.getLatest("T1");
@@ -114,7 +114,7 @@ public class PersistentTradeServiceIntegrationTest {
 		log.info("Starting testTradeNotStoredWhenMaturityDateInPast");
 		LocalDate today = LocalDate.of(2020, 8, 15);
 		LocalDate maturityDate = LocalDate.of(2020, 8, 14);
-		Trade t1 = getTrade("T1", 2, maturityDate, today);
+		Trade t1 = getTrade("T1", 2, maturityDate);
 
 		tradeService.store(t1, today);
 		Trade dbTrade = tradeService.getLatest("T1");
@@ -126,8 +126,8 @@ public class PersistentTradeServiceIntegrationTest {
 		log.info("Starting testWhenExpiredFlagIsUpdated");
 		LocalDate today = LocalDate.of(2020, 8, 15);
 		LocalDate yesterday = LocalDate.of(2020, 8, 14);
-		Trade t1 = getTrade("T1", 1, yesterday, yesterday);
-		Trade t2 = getTrade("T1", 2, today, today);
+		Trade t1 = getTrade("T1", 1, yesterday);
+		Trade t2 = getTrade("T1", 2, today);
 
 		tradeService.store(t1, yesterday);
 		tradeService.store(t2, today);
@@ -139,8 +139,8 @@ public class PersistentTradeServiceIntegrationTest {
 		Assertions.assertTrue(dbTrade.isExpired());
 	}
 
-	private Trade getTrade(String tradeId, int version, LocalDate maturityDate, LocalDate createdOn) {
+	private Trade getTrade(String tradeId, int version, LocalDate maturityDate) {
 		return Trade.builder().id(tradeId).version(version).counterPartyId("CP1").bookId("B1").expired(false)
-				.maturityDate(maturityDate).createdOn(maturityDate).build();
+				.maturityDate(maturityDate).build();
 	}
 }
